@@ -22,7 +22,7 @@ namespace _3DRotations
 		void StopRenderLoop();
 		Concurrency::critical_section& GetCriticalSection() { return m_criticalSection; }
 
-		void UpdateInput();
+		void UpdateInput(float xAngle, float yAngle, float zAngle);
 
 		// IDeviceNotify
 		virtual void OnDeviceLost();

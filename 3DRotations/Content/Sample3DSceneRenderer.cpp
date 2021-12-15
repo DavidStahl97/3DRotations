@@ -66,8 +66,15 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(eye, at, up)));
 }
 
+void Sample3DSceneRenderer::UpdateInput(float xAngle, float yAngle, float zAngle) 
+{
+	m_xAngle = xAngle;
+	m_yAngle = yAngle;
+	m_zAngle = zAngle;
+}
+
 // Called once per frame, rotates the cube and calculates the model and view matrices.
-void Sample3DSceneRenderer::Update(float x_angle, float y_angle, float z_angle)
+void Sample3DSceneRenderer::Update()
 {
 	if (!m_tracking)
 	{
@@ -77,7 +84,7 @@ void Sample3DSceneRenderer::Update(float x_angle, float y_angle, float z_angle)
 		//double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
 		//float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
 
-		Rotate(x_angle, y_angle, z_angle);
+		Rotate(m_xAngle, m_yAngle, m_zAngle);
 	}
 }
 
@@ -313,9 +320,15 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 			5, 1, 0,
 			4, 5, 0,
 
+			3, 2, 6,
+			3, 6, 7,
+
 			// arrow			
 			8, 9, 10,
 			11, 9, 8,
+
+			14, 13, 12,
+			12, 13, 15,
 
 			12, 13, 14,
 			15, 13, 12,

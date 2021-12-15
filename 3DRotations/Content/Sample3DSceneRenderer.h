@@ -14,7 +14,8 @@ namespace _3DRotations
 		void CreateDeviceDependentResources();
 		void CreateWindowSizeDependentResources();
 		void ReleaseDeviceDependentResources();
-		void Update(float x_angle, float y_angle, float z_angle);
+		void Update();
+		void UpdateInput(float x_angle, float y_angle, float z_angle);
 		void Render();
 		void StartTracking();
 		void TrackingUpdate(float positionX);
@@ -45,6 +46,10 @@ namespace _3DRotations
 		bool	m_loadingComplete;
 		float	m_degreesPerSecond;
 		bool	m_tracking;
+
+		float m_xAngle = 0;
+		float m_yAngle = 0;
+		float m_zAngle = 0;
 	};
 }
 

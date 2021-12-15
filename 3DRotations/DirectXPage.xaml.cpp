@@ -5,6 +5,7 @@
 
 #include "pch.h"
 #include "DirectXPage.xaml.h"
+#include <DirectXMath.h>
 
 using namespace _3DRotations;
 
@@ -24,11 +25,25 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace concurrency;
 
+const int maxSlideValue = 500;
+
+void InitializeSlider(Windows::UI::Xaml::Controls::Slider^ slider) 
+{
+	slider->Minimum = -maxSlideValue;
+	slider->Maximum = maxSlideValue;
+	slider->Value = 0;
+	slider->TickFrequency = 1;
+}
+
 DirectXPage::DirectXPage():
 	m_windowVisible(true),
 	m_coreInput(nullptr)
 {
 	InitializeComponent();
+
+	InitializeSlider(xSlider);
+	InitializeSlider(ySlider);
+	InitializeSlider(zSlider);
 
 	// Register event handlers for page lifecycle.
 	CoreWindow^ window = Window::Current->CoreWindow;
@@ -160,9 +175,16 @@ void DirectXPage::AppBarButton_Click(Object^ sender, RoutedEventArgs^ e)
 	// then fill in event handlers (like this one).
 }
 
+float SlideValueToAngle(double slideValue) 
+{
+	return (slideValue / maxSlideValue) * DirectX::XM_PI * 2;
+}
+
 void DirectXPage::slider2_ValueChanged(Object^ sender, RoutedEventArgs^ e) 
 {
-
+	m_main->UpdateInput(SlideValueToAngle(xSlider->Value), 
+		SlideValueToAngle(ySlider->Value), 
+		SlideValueToAngle(zSlider->Value));
 }
 
 void DirectXPage::OnPointerPressed(Object^ sender, PointerEventArgs^ e)

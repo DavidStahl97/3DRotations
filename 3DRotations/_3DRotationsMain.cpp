@@ -33,6 +33,11 @@ _3DRotationsMain::~_3DRotationsMain()
 	m_deviceResources->RegisterDeviceNotify(nullptr);
 }
 
+void _3DRotationsMain::UpdateInput(float xAngle, float yAngle, float zAngle)
+{
+	m_sceneRenderer->UpdateInput(xAngle, yAngle, zAngle);
+}
+
 // Updates application state when the window size changes (e.g. device orientation change)
 void _3DRotationsMain::CreateWindowSizeDependentResources() 
 {
@@ -81,7 +86,7 @@ void _3DRotationsMain::Update()
 	m_timer.Tick([&]()
 	{
 		// TODO: Replace this with your app's content update functions.
-		m_sceneRenderer->Update(0, 0, 0);
+		m_sceneRenderer->Update();
 		m_fpsTextRenderer->Update(m_timer);
 	});
 }
