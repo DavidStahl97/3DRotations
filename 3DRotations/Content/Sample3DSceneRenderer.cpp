@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Sample3DSceneRenderer.h"
+#include <DirectXMath.h>
 
 #include "..\Common\DirectXHelper.h"
 
@@ -66,24 +67,29 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 }
 
 // Called once per frame, rotates the cube and calculates the model and view matrices.
-void Sample3DSceneRenderer::Update(DX::StepTimer const& timer)
+void Sample3DSceneRenderer::Update(float x_angle, float y_angle, float z_angle)
 {
 	if (!m_tracking)
 	{
 		// Convert degrees to radians, then convert seconds to rotation angle
-		float radiansPerSecond = XMConvertToRadians(m_degreesPerSecond);
-		double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
-		float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
+		
+		//float radiansPerSecond = XMConvertToRadians(m_degreesPerSecond);
+		//double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
+		//float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
 
-		Rotate(radians);
+		Rotate(x_angle, y_angle, z_angle);
 	}
 }
 
 // Rotate the 3D cube model a set amount of radians.
-void Sample3DSceneRenderer::Rotate(float radians)
+void Sample3DSceneRenderer::Rotate(float x_angle, float y_angle, float z_angle)
 {
+
+	auto rotationMatrix = XMMatrixRotationX(x_angle) * XMMatrixRotationY(y_angle) * XMMatrixRotationZ(z_angle);
+
 	// Prepare to pass the updated model matrix to the shader
-	XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationY(radians)));
+	XMStoreFloat4x4(&m_constantBufferData.model, rotationMatrix);
+	//XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
 }
 
 void Sample3DSceneRenderer::StartTracking()
@@ -97,7 +103,7 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX)
 	if (m_tracking)
 	{
 		float radians = XM_2PI * 2.0f * positionX / m_deviceResources->GetOutputSize().Width;
-		Rotate(radians);
+		Rotate(0, 0, 0);
 	}
 }
 
@@ -238,17 +244,37 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	// Once both shaders are loaded, create the mesh.
 	auto createCubeTask = (createPSTask && createVSTask).then([this] () {
 
+		const float length = 0.3f;
+		const float hight = 0.03f;
+		const float depth = 0.05f;
+
+		const float arrowLength = 0.2f;
+		const float arrowDepth = 0.15;
+
 		// Load mesh vertices. Each vertex has a position and a color.
 		static const VertexPositionColor cubeVertices[] = 
 		{
-			{XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(-0.5f, -0.5f,  0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-0.5f,  0.5f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f)},
-			{XMFLOAT3(-0.5f,  0.5f,  0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f)},
-			{XMFLOAT3( 0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f)},
-			{XMFLOAT3( 0.5f, -0.5f,  0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f)},
-			{XMFLOAT3( 0.5f,  0.5f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f)},
-			{XMFLOAT3( 0.5f,  0.5f,  0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			// rectangle
+			{XMFLOAT3(-length, hight, depth), XMFLOAT3(0.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(length, hight,  depth), XMFLOAT3(0.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(length, -hight,  depth), XMFLOAT3(0.0f, 0.0f, 1.0f)},
+			{XMFLOAT3(-length, -hight,  depth), XMFLOAT3(0.0f, 0.0f, 1.0f)},
+
+			{XMFLOAT3(-length, hight, -depth), XMFLOAT3(0.0f, 0.0f, 0.0f)},
+			{XMFLOAT3(length, hight,  -depth), XMFLOAT3(0.0f, 0.3f, 0.4f)},
+			{XMFLOAT3(length, -hight,  -depth), XMFLOAT3(0.5f, 0.0f, 0.3f)},
+			{XMFLOAT3(-length, -hight,  -depth), XMFLOAT3(0.9f, 0.1f, 1.0f)},
+
+			// arrow
+			{XMFLOAT3(length, hight,  0), XMFLOAT3(0.5f, 0.0f, 0.3f)},
+			{XMFLOAT3(length + arrowLength, hight,  0), XMFLOAT3(0.0f, 0.0f, 0.3f)},
+			{XMFLOAT3(length, hight, 2 * depth), XMFLOAT3(0.1f, 0.0f, 0.3f)},
+			{XMFLOAT3(length, hight, 2 * -depth), XMFLOAT3(0.8f, 0.2f, 0.3f)},
+
+			{XMFLOAT3(length, -hight,  0), XMFLOAT3(0.5f, 0.0f, 0.3f)},
+			{XMFLOAT3(length + arrowLength, -hight,  0), XMFLOAT3(0.0f, 0.0f, 0.3f)},
+			{XMFLOAT3(length, -hight, 2 * depth), XMFLOAT3(0.8f, 0.7f, 0.35f)},
+			{XMFLOAT3(length, -hight, 2 * -depth), XMFLOAT3(0.1f, 0.0f, 0.8f)},
 		};
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
@@ -271,23 +297,37 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 		// first triangle of this mesh.
 		static const unsigned short cubeIndices [] =
 		{
-			0,2,1, // -x
-			1,2,3,
+			// rectangle
+			0, 1, 2,
+			0, 2, 3,
 
-			4,5,6, // +x
-			5,7,6,
+			6, 5, 4,
+			7, 6, 4,
 
-			0,1,5, // -y
-			0,5,4,
+			3, 4, 0,
+			7, 4, 3,
 
-			2,6,7, // +y
-			2,7,3,
+			5, 2, 1,
+			2, 5, 6,
 
-			0,4,6, // -z
-			0,6,2,
+			5, 1, 0,
+			4, 5, 0,
 
-			1,3,7, // +z
-			1,7,5,
+			// arrow			
+			8, 9, 10,
+			11, 9, 8,
+
+			12, 13, 14,
+			15, 13, 12,
+
+			15, 11, 10,
+			14, 15, 10,
+
+			10, 9, 14,
+			14, 9, 13,
+
+			15, 9, 11,
+			13, 9, 15,
 		};
 
 		m_indexCount = ARRAYSIZE(cubeIndices);

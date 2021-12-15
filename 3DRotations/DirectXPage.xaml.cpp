@@ -160,6 +160,11 @@ void DirectXPage::AppBarButton_Click(Object^ sender, RoutedEventArgs^ e)
 	// then fill in event handlers (like this one).
 }
 
+void DirectXPage::slider2_ValueChanged(Object^ sender, RoutedEventArgs^ e) 
+{
+
+}
+
 void DirectXPage::OnPointerPressed(Object^ sender, PointerEventArgs^ e)
 {
 	// When the pointer is pressed begin tracking the pointer movement.

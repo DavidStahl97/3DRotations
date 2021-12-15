@@ -14,7 +14,7 @@ namespace _3DRotations
 		void CreateDeviceDependentResources();
 		void CreateWindowSizeDependentResources();
 		void ReleaseDeviceDependentResources();
-		void Update(DX::StepTimer const& timer);
+		void Update(float x_angle, float y_angle, float z_angle);
 		void Render();
 		void StartTracking();
 		void TrackingUpdate(float positionX);
@@ -23,7 +23,7 @@ namespace _3DRotations
 
 
 	private:
-		void Rotate(float radians);
+		void Rotate(float x_angle, float y_angle, float z_angle);
 
 	private:
 		// Cached pointer to device resources.
