@@ -10,7 +10,7 @@
                 <winui:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style x:Name="TextBoxTitle" TargetType="TextBlock">
+            <Style x:Name="TextBlockTitle" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="20"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
             </Style>

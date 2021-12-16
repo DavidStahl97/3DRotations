@@ -15,10 +15,19 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical">
-            <local:AngleSlider x:Name="ZSlider" Axis="Z" AngleChanged="AngleSlider_AngleChanged"/>
-            <local:AngleSlider x:Name="YSlider" Axis="Y" AngleChanged="YSlider_AngleChanged"/>
-            <local:AngleSlider x:Name="XSlider" Axis="X" AngleChanged="XSlider_AngleChanged"/>
+        <StackPanel Orientation="Vertical"
+                    Padding="10">
+
+            <TextBlock Text="Euler Angles"
+                       Style="{StaticResource TextBlockTitle}"
+                       Margin="0 0 0 10"/>
+
+            <StackPanel Orientation="Vertical"
+                        Padding="5 0 0 0">
+                <local:AngleSlider x:Name="ZSlider" Axis="Z" AngleChanged="AngleSlider_AngleChanged"/>
+                <local:AngleSlider x:Name="YSlider" Axis="Y" AngleChanged="YSlider_AngleChanged"/>
+                <local:AngleSlider x:Name="XSlider" Axis="X" AngleChanged="XSlider_AngleChanged"/>
+            </StackPanel>
         </StackPanel>
         
         <rendering:DirectXPage x:Name="DirectXPage" Grid.Column="1"/>
