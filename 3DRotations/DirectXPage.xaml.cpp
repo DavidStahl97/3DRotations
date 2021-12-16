@@ -25,25 +25,13 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace concurrency;
 
-const int maxSlideValue = 500;
-
-void InitializeSlider(Windows::UI::Xaml::Controls::Slider^ slider) 
-{
-	slider->Minimum = -maxSlideValue;
-	slider->Maximum = maxSlideValue;
-	slider->Value = 0;
-	slider->TickFrequency = 1;
-}
+const int maxSlideValue = 360;
 
 DirectXPage::DirectXPage():
 	m_windowVisible(true),
 	m_coreInput(nullptr)
 {
 	InitializeComponent();
-
-	InitializeSlider(xSlider);
-	InitializeSlider(ySlider);
-	InitializeSlider(zSlider);
 
 	// Register event handlers for page lifecycle.
 	CoreWindow^ window = Window::Current->CoreWindow;
@@ -82,11 +70,6 @@ DirectXPage::DirectXPage():
 			Windows::UI::Core::CoreInputDeviceTypes::Touch |
 			Windows::UI::Core::CoreInputDeviceTypes::Pen
 			);
-
-		// Register for pointer events, which will be raised on the background thread.
-		m_coreInput->PointerPressed += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &DirectXPage::OnPointerPressed);
-		m_coreInput->PointerMoved += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &DirectXPage::OnPointerMoved);
-		m_coreInput->PointerReleased += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &DirectXPage::OnPointerReleased);
 
 		// Begin processing input messages as they're delivered.
 		m_coreInput->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessUntilQuit);
@@ -182,30 +165,9 @@ float SlideValueToAngle(double slideValue)
 
 void DirectXPage::slider2_ValueChanged(Object^ sender, RoutedEventArgs^ e) 
 {
-	m_main->UpdateInput(SlideValueToAngle(xSlider->Value), 
-		SlideValueToAngle(ySlider->Value), 
-		SlideValueToAngle(zSlider->Value));
-}
-
-void DirectXPage::OnPointerPressed(Object^ sender, PointerEventArgs^ e)
-{
-	// When the pointer is pressed begin tracking the pointer movement.
-	m_main->StartTracking();
-}
-
-void DirectXPage::OnPointerMoved(Object^ sender, PointerEventArgs^ e)
-{
-	// Update the pointer tracking code.
-	if (m_main->IsTracking())
-	{
-		m_main->TrackingUpdate(e->CurrentPoint->Position.X);
-	}
-}
-
-void DirectXPage::OnPointerReleased(Object^ sender, PointerEventArgs^ e)
-{
-	// Stop tracking pointer movement when the pointer is released.
-	m_main->StopTracking();
+	//m_main->UpdateInput(SlideValueToAngle(xSlider->Value), 
+	//	SlideValueToAngle(ySlider->Value), 
+	//	SlideValueToAngle(zSlider->Value));
 }
 
 void DirectXPage::OnCompositionScaleChanged(SwapChainPanel^ sender, Object^ args)

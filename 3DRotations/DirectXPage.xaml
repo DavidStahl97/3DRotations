@@ -13,44 +13,19 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical">
-            <Slider x:Name="zSlider"  
-                    Minimum="0" 
-                    Maximum="10"
-                    TickFrequency="2"
-                    TickPlacement="BottomRight"
-                    ValueChanged="slider2_ValueChanged" />
-            <Slider x:Name="ySlider"  
-                    Minimum="0" 
-                    Maximum="10"
-                    TickFrequency="2"
-                    TickPlacement="BottomRight"
-                    ValueChanged="slider2_ValueChanged" />
-            <Slider x:Name="xSlider"  
-                    Minimum="0" 
-                    Maximum="10"
-                    TickFrequency="2"
-                    TickPlacement="BottomRight"
-                    ValueChanged="slider2_ValueChanged"/>
-        </StackPanel>
+        <StackPanel Orientation="Vertical"
+                    Margin="15 30 15 15">
+            <TextBlock Text="Euler Angles"
+                       Style="{StaticResource TextBoxTitle}"/>
 
+            <local:AngleSlider/>
+            <local:AngleSlider/>
+            <local:AngleSlider/>
+        </StackPanel>
+        
         <SwapChainPanel x:Name="swapChainPanel"
                       Grid.Column="1">
-            <TextBlock Text="Hello from XAML!"
-                       HorizontalAlignment="Right"
-                       VerticalAlignment="Top"
-                       FontSize="30" />
         </SwapChainPanel>
         
     </Grid>
-
-  <!--<Page.BottomAppBar>
-    <AppBar x:Name="bottomAppBar" Padding="10,0,10,0">
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-        <AppBarButton AutomationProperties.Name="Sample Button"
-                      AutomationProperties.AutomationId="SampleAppBarButton"
-                      Click="AppBarButton_Click"/>
-      </StackPanel>
-    </AppBar>
-  </Page.BottomAppBar>-->
 </Page>
