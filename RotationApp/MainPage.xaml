@@ -10,6 +10,18 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <rendering:D3DPanel x:Name="DirectXPanel1" Height="300" Width="300" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Vertical">
+            <local:AngleSlider/>
+            <local:AngleSlider/>
+            <local:AngleSlider/>
+        </StackPanel>
+        
+        <rendering:DirectXPage Grid.Column="1"/>
+        <!--<rendering:D3DPanel x:Name="DirectXPanel1" Height="300" Width="300" />-->
     </Grid>
 </Page>
