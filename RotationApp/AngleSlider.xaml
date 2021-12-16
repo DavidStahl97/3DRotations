@@ -16,19 +16,20 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Y"
+        <TextBlock Text="{x:Bind Axis}"
                    VerticalAlignment="Center"
                    Margin="0 0 10 0"/>
 
-        <Slider x:Name="ySlider"                
+        <Slider x:Name="Slider"                
                 Grid.Column="1"
                 Margin="0 0 10 0"
                 Minimum="-360"
                 Maximum="360"
+                ValueChanged="Slider_ValueChanged"
                 Value="0"/>
 
         <TextBlock Grid.Column="2"
-                   Text="{Binding ElementName=ySlider, Path=Value, Mode=OneWay}"
+                   Text="{Binding ElementName=Slider, Path=Value, Mode=OneWay}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    Width="30"/>

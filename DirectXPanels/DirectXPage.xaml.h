@@ -24,6 +24,8 @@ namespace DirectXPanels
 		void SaveInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 		void LoadInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 
+		void InputUpdate(float xAngle, float yAngle, float zAngle);
+
 	private:
 		// XAML low-level rendering event handler.
 		void OnRendering(Platform::Object^ sender, Platform::Object^ args);

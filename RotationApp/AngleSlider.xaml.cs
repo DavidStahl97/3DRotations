@@ -23,5 +23,31 @@ namespace RotationApp
         {
             this.InitializeComponent();
         }
+
+        public static readonly DependencyProperty AngleProperty =
+            DependencyProperty.Register(nameof(Angle), typeof(double), typeof(AngleSlider), null);
+
+        public double Angle 
+        { 
+            get => (double)GetValue(AngleProperty);
+            set => SetValue(AngleProperty, value);
+        }
+
+        public static readonly DependencyProperty AxisProperty =
+            DependencyProperty.Register(nameof(Axis), typeof(Axis), typeof(AngleSlider), null);
+
+        public Axis Axis 
+        { 
+            get => (Axis)GetValue(AxisProperty);
+            set => SetValue(AxisProperty, value);
+        }
+
+        public event EventHandler<double> AngleChanged;
+
+        private void Slider_ValueChanged(object _, RangeBaseValueChangedEventArgs e)
+        {
+            AngleChanged?.Invoke(this, Slider.Value);
+            Angle = e.NewValue;
+        }
     }
 }

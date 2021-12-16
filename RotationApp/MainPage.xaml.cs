@@ -25,7 +25,23 @@ namespace RotationApp
         public MainPage()
         {
             this.InitializeComponent();
-            //DirectXPanel1.StartRenderLoop(new[] { 2.0f, 23.1f });
+        }
+
+        private void AngleSlider_AngleChanged(object _, double e)
+            => UpdateAngle(XSlider.Angle, YSlider.Angle, e);
+
+        private void YSlider_AngleChanged(object _, double e)
+            => UpdateAngle(XSlider.Angle, e, ZSlider.Angle);
+
+        private void XSlider_AngleChanged(object _, double e)
+            => UpdateAngle(e, YSlider.Angle, ZSlider.Angle);
+
+        private void UpdateAngle(double x, double y, double z)
+        {
+            float DegreesToRadius(double degree)
+                => (float)((degree / 360) * 2 * Math.PI);
+
+            DirectXPage.InputUpdate(DegreesToRadius(x), DegreesToRadius(y), DegreesToRadius(z)); 
         }
     }
 }

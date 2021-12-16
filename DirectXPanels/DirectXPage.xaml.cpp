@@ -89,6 +89,11 @@ DirectXPage::~DirectXPage()
 	m_coreInput->Dispatcher->StopProcessEvents();
 }
 
+void DirectXPage::InputUpdate(float xAngle, float yAngle, float zAngle) 
+{
+	m_main->UpdateInput(xAngle, yAngle, zAngle);
+}
+
 // Saves the current state of the app for suspend and terminate events.
 void DirectXPage::SaveInternalState(IPropertySet^ state)
 {

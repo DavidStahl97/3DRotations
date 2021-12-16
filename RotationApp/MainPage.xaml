@@ -16,12 +16,11 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Orientation="Vertical">
-            <local:AngleSlider/>
-            <local:AngleSlider/>
-            <local:AngleSlider/>
+            <local:AngleSlider x:Name="ZSlider" Axis="Z" AngleChanged="AngleSlider_AngleChanged"/>
+            <local:AngleSlider x:Name="YSlider" Axis="Y" AngleChanged="YSlider_AngleChanged"/>
+            <local:AngleSlider x:Name="XSlider" Axis="X" AngleChanged="XSlider_AngleChanged"/>
         </StackPanel>
         
-        <rendering:DirectXPage Grid.Column="1"/>
-        <!--<rendering:D3DPanel x:Name="DirectXPanel1" Height="300" Width="300" />-->
+        <rendering:DirectXPage x:Name="DirectXPage" Grid.Column="1"/>
     </Grid>
 </Page>
