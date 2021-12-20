@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "Sample3DSceneRenderer.h"
+#include "SceneRenderer.h"
 #include <DirectXMath.h>
 
 #include "..\Common\DirectXHelper.h"
@@ -10,7 +10,7 @@ using namespace DirectX;
 using namespace Windows::Foundation;
 
 // Loads vertex and pixel shaders from files and instantiates the cube geometry.
-Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
+SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
 	m_loadingComplete(false),
 	m_degreesPerSecond(45),
 	m_indexCount(0),
@@ -22,7 +22,7 @@ Sample3DSceneRenderer::Sample3DSceneRenderer(const std::shared_ptr<DX::DeviceRes
 }
 
 // Initializes view parameters when the window size changes.
-void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
+void SceneRenderer::CreateWindowSizeDependentResources()
 {
 	Size outputSize = m_deviceResources->GetOutputSize();
 	float aspectRatio = outputSize.Width / outputSize.Height;
@@ -66,7 +66,7 @@ void Sample3DSceneRenderer::CreateWindowSizeDependentResources()
 	XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(eye, at, up)));
 }
 
-void Sample3DSceneRenderer::UpdateInput(float xAngle, float yAngle, float zAngle) 
+void SceneRenderer::UpdateInput(float xAngle, float yAngle, float zAngle) 
 {
 	m_xAngle = xAngle;
 	m_yAngle = yAngle;
@@ -74,7 +74,7 @@ void Sample3DSceneRenderer::UpdateInput(float xAngle, float yAngle, float zAngle
 }
 
 // Called once per frame, rotates the cube and calculates the model and view matrices.
-void Sample3DSceneRenderer::Update()
+void SceneRenderer::Update()
 {
 	if (!m_tracking)
 	{
@@ -89,7 +89,7 @@ void Sample3DSceneRenderer::Update()
 }
 
 // Rotate the 3D cube model a set amount of radians.
-void Sample3DSceneRenderer::Rotate(float x_angle, float y_angle, float z_angle)
+void SceneRenderer::Rotate(float x_angle, float y_angle, float z_angle)
 {
 
 	auto rotationMatrix = XMMatrixRotationX(x_angle) * XMMatrixRotationY(y_angle) * XMMatrixRotationZ(z_angle);
@@ -99,13 +99,13 @@ void Sample3DSceneRenderer::Rotate(float x_angle, float y_angle, float z_angle)
 	//XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
 }
 
-void Sample3DSceneRenderer::StartTracking()
+void SceneRenderer::StartTracking()
 {
 	m_tracking = true;
 }
 
 // When tracking, the 3D cube can be rotated around its Y axis by tracking pointer position relative to the output screen width.
-void Sample3DSceneRenderer::TrackingUpdate(float positionX)
+void SceneRenderer::TrackingUpdate(float positionX)
 {
 	if (m_tracking)
 	{
@@ -114,13 +114,13 @@ void Sample3DSceneRenderer::TrackingUpdate(float positionX)
 	}
 }
 
-void Sample3DSceneRenderer::StopTracking()
+void SceneRenderer::StopTracking()
 {
 	m_tracking = false;
 }
 
 // Renders one frame using the vertex and pixel shaders.
-void Sample3DSceneRenderer::Render()
+void SceneRenderer::Render()
 {
 	// Loading is asynchronous. Only draw geometry after it's loaded.
 	if (!m_loadingComplete)
@@ -193,7 +193,7 @@ void Sample3DSceneRenderer::Render()
 		);
 }
 
-void Sample3DSceneRenderer::CreateDeviceDependentResources()
+void SceneRenderer::CreateDeviceDependentResources()
 {
 	// Load shaders asynchronously.
 	auto loadVSTask = DX::ReadDataAsync(L"DirectXPanels\\SampleVertexShader.cso");
@@ -365,7 +365,7 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 	});
 }
 
-void Sample3DSceneRenderer::ReleaseDeviceDependentResources()
+void SceneRenderer::ReleaseDeviceDependentResources()
 {
 	m_loadingComplete = false;
 	m_vertexShader.Reset();
