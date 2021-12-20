@@ -10,10 +10,15 @@ namespace DirectXPanels
 		DirectX::XMFLOAT4X4 projection;
 	};
 
-	// Used to send per-vertex data to the vertex shader.
-	struct VertexPositionColor
+	struct Vertex
 	{
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMFLOAT3 color;
+		DirectX::XMFLOAT3 Position;
+		DirectX::XMFLOAT4 Color;
+	};
+
+	struct MeshData
+	{
+		std::vector<Vertex> Vertices;
+		std::vector<UINT> Indices;
 	};
 }

@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 
 #include "..\Common\DirectXHelper.h"
+#include "Meshes.h"
 
 using namespace DirectXPanels;
 
@@ -142,7 +143,7 @@ void SceneRenderer::Render()
 		);
 
 	// Each vertex is one instance of the VertexPositionColor struct.
-	UINT stride = sizeof(VertexPositionColor);
+	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	context->IASetVertexBuffers(
 		0,
@@ -154,7 +155,7 @@ void SceneRenderer::Render()
 
 	context->IASetIndexBuffer(
 		m_indexBuffer.Get(),
-		DXGI_FORMAT_R16_UINT, // Each index is one 16-bit unsigned integer (short).
+		DXGI_FORMAT_R32_UINT, // Each index is one 16-bit unsigned integer (short).
 		0
 		);
 
@@ -213,7 +214,7 @@ void SceneRenderer::CreateDeviceDependentResources()
 		static const D3D11_INPUT_ELEMENT_DESC vertexDesc [] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		DX::ThrowIfFailed(
@@ -251,105 +252,30 @@ void SceneRenderer::CreateDeviceDependentResources()
 	// Once both shaders are loaded, create the mesh.
 	auto createCubeTask = (createPSTask && createVSTask).then([this] () {
 
-		const float length = 0.3f;
-		const float hight = 0.03f;
-		const float depth = 0.05f;
-
-		const float arrowLength = 0.2f;
-		const float arrowDepth = 0.15;
-
-		// Load mesh vertices. Each vertex has a position and a color.
-		static const VertexPositionColor cubeVertices[] = 
-		{
-			// rectangle
-			{XMFLOAT3(-length, hight, depth), XMFLOAT3(0.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(length, hight,  depth), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(length, -hight,  depth), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-			{XMFLOAT3(-length, -hight,  depth), XMFLOAT3(0.0f, 0.0f, 1.0f)},
-
-			{XMFLOAT3(-length, hight, -depth), XMFLOAT3(0.0f, 0.0f, 0.0f)},
-			{XMFLOAT3(length, hight,  -depth), XMFLOAT3(0.0f, 0.3f, 0.4f)},
-			{XMFLOAT3(length, -hight,  -depth), XMFLOAT3(0.5f, 0.0f, 0.3f)},
-			{XMFLOAT3(-length, -hight,  -depth), XMFLOAT3(0.9f, 0.1f, 1.0f)},
-
-			// arrow
-			{XMFLOAT3(length, hight,  0), XMFLOAT3(0.5f, 0.0f, 0.3f)},
-			{XMFLOAT3(length + arrowLength, hight,  0), XMFLOAT3(0.0f, 0.0f, 0.3f)},
-			{XMFLOAT3(length, hight, 2 * depth), XMFLOAT3(0.1f, 0.0f, 0.3f)},
-			{XMFLOAT3(length, hight, 2 * -depth), XMFLOAT3(0.8f, 0.2f, 0.3f)},
-
-			{XMFLOAT3(length, -hight,  0), XMFLOAT3(0.5f, 0.0f, 0.3f)},
-			{XMFLOAT3(length + arrowLength, -hight,  0), XMFLOAT3(0.0f, 0.0f, 0.3f)},
-			{XMFLOAT3(length, -hight, 2 * depth), XMFLOAT3(0.8f, 0.7f, 0.35f)},
-			{XMFLOAT3(length, -hight, 2 * -depth), XMFLOAT3(0.1f, 0.0f, 0.8f)},
-		};
+		MeshData meshData;
+		CreateArrow(meshData);		
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
-		vertexBufferData.pSysMem = cubeVertices;
+		vertexBufferData.pSysMem = &meshData.Vertices[0];
 		vertexBufferData.SysMemPitch = 0;
 		vertexBufferData.SysMemSlicePitch = 0;
-		CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(cubeVertices), D3D11_BIND_VERTEX_BUFFER);
+
+		CD3D11_BUFFER_DESC vertexBufferDesc(meshData.Vertices.size() * sizeof(Vertex), D3D11_BIND_VERTEX_BUFFER);
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreateBuffer(
 				&vertexBufferDesc,
 				&vertexBufferData,
 				&m_vertexBuffer
 				)
-			);
+			);		
 
-		// Load mesh indices. Each trio of indices represents
-		// a triangle to be rendered on the screen.
-		// For example: 0,2,1 means that the vertices with indexes
-		// 0, 2 and 1 from the vertex buffer compose the 
-		// first triangle of this mesh.
-		static const unsigned short cubeIndices [] =
-		{
-			// rectangle
-			0, 1, 2,
-			0, 2, 3,
-
-			6, 5, 4,
-			7, 6, 4,
-
-			3, 4, 0,
-			7, 4, 3,
-
-			5, 2, 1,
-			2, 5, 6,
-
-			5, 1, 0,
-			4, 5, 0,
-
-			3, 2, 6,
-			3, 6, 7,
-
-			// arrow			
-			8, 9, 10,
-			11, 9, 8,
-
-			14, 13, 12,
-			12, 13, 15,
-
-			12, 13, 14,
-			15, 13, 12,
-
-			15, 11, 10,
-			14, 15, 10,
-
-			10, 9, 14,
-			14, 9, 13,
-
-			15, 9, 11,
-			13, 9, 15,
-		};
-
-		m_indexCount = ARRAYSIZE(cubeIndices);
+		m_indexCount = meshData.Indices.size();
 
 		D3D11_SUBRESOURCE_DATA indexBufferData = {0};
-		indexBufferData.pSysMem = cubeIndices;
+		indexBufferData.pSysMem = &meshData.Indices[0];
 		indexBufferData.SysMemPitch = 0;
 		indexBufferData.SysMemSlicePitch = 0;
-		CD3D11_BUFFER_DESC indexBufferDesc(sizeof(cubeIndices), D3D11_BIND_INDEX_BUFFER);
+		CD3D11_BUFFER_DESC indexBufferDesc(meshData.Indices.size() * sizeof(UINT), D3D11_BIND_INDEX_BUFFER);
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreateBuffer(
 				&indexBufferDesc,

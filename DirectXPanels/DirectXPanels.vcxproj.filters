@@ -20,6 +20,9 @@
     </ClCompile>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="_3DRotationsMain.cpp" />
+    <ClCompile Include="Meshes.cpp">
+      <Filter>Content</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\DeviceResources.h">
@@ -42,6 +45,9 @@
     </ClInclude>
     <ClInclude Include="pch.h" />
     <ClInclude Include="_3DRotationsMain.h" />
+    <ClInclude Include="Meshes.h">
+      <Filter>Content</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Page Include="DirectXPage.xaml" />
