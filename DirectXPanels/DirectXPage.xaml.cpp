@@ -78,7 +78,7 @@ DirectXPage::DirectXPage():
 	// Run task on a dedicated high priority background thread.
 	m_inputLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
 
-	m_main = std::unique_ptr<_3DRotationsMain>(new _3DRotationsMain(m_deviceResources));
+	m_main = std::unique_ptr<Rendering::Scene>(new Rendering::Scene(m_deviceResources));
 	m_main->StartRenderLoop();
 }
 

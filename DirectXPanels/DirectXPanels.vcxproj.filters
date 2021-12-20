@@ -1,59 +1,102 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Common">
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{0801c25e-6acc-4c17-87dd-6b115740e942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Content">
+      <UniqueIdentifier>{ffc571cd-c9c1-4899-b6cd-741feb9b3501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Common">
       <UniqueIdentifier>{6dece7f1-fe55-461e-a884-fdfccef95a7b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Content">
-      <UniqueIdentifier>{ffc571cd-c9c1-4899-b6cd-741feb9b3501}</UniqueIdentifier>
+    <Filter Include="Rendering\Shaders">
+      <UniqueIdentifier>{7a0f7be8-5ecd-48b9-b5f5-7635a549adad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\World">
+      <UniqueIdentifier>{0a8f8d25-49f5-4684-a45b-ea64826c98f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\DeviceResources.cpp">
-      <Filter>Common</Filter>
+      <Filter>Rendering\Common</Filter>
     </ClCompile>
     <ClCompile Include="Content\SceneRenderer.cpp">
-      <Filter>Content</Filter>
+      <Filter>Rendering\Content</Filter>
     </ClCompile>
     <ClCompile Include="Content\FpsTextRenderer.cpp">
-      <Filter>Content</Filter>
+      <Filter>Rendering\Content</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="_3DRotationsMain.cpp" />
+    <ClCompile Include="Scene.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Rendering\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Rendering\World</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Rendering\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Arrow.cpp">
+      <Filter>Rendering\World</Filter>
+    </ClCompile>
     <ClCompile Include="Meshes.cpp">
-      <Filter>Content</Filter>
+      <Filter>Rendering\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\DeviceResources.h">
-      <Filter>Common</Filter>
+      <Filter>Rendering\Common</Filter>
     </ClInclude>
     <ClInclude Include="Common\DirectXHelper.h">
-      <Filter>Common</Filter>
+      <Filter>Rendering\Common</Filter>
     </ClInclude>
     <ClInclude Include="Common\StepTimer.h">
-      <Filter>Common</Filter>
+      <Filter>Rendering\Common</Filter>
     </ClInclude>
     <ClInclude Include="Content\SceneRenderer.h">
-      <Filter>Content</Filter>
+      <Filter>Rendering\Content</Filter>
     </ClInclude>
     <ClInclude Include="Content\FpsTextRenderer.h">
-      <Filter>Content</Filter>
+      <Filter>Rendering\Content</Filter>
     </ClInclude>
     <ClInclude Include="Content\ShaderStructures.h">
-      <Filter>Content</Filter>
+      <Filter>Rendering\Content</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="_3DRotationsMain.h" />
+    <ClInclude Include="Scene.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Rendering\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Rendering\World</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Rendering\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Arrow.h">
+      <Filter>Rendering\World</Filter>
+    </ClInclude>
     <ClInclude Include="Meshes.h">
-      <Filter>Content</Filter>
+      <Filter>Rendering\World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="DirectXPage.xaml" />
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="SamplePixelShader.hlsl" />
-    <FxCompile Include="SampleVertexShader.hlsl" />
+    <Page Include="DirectXPage.xaml">
+      <Filter>Rendering</Filter>
+    </Page>
   </ItemGroup>
 </Project>

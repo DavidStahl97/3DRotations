@@ -8,7 +8,7 @@
 #include "DirectXPage.g.h"
 
 #include "Common\DeviceResources.h"
-#include "_3DRotationsMain.h"
+#include "Scene.h"
 
 namespace DirectXPanels
 {
@@ -50,7 +50,7 @@ namespace DirectXPanels
 
 		// Resources used to render the DirectX content in the XAML page background.
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
-		std::unique_ptr<_3DRotationsMain> m_main; 
+		std::unique_ptr<Rendering::Scene> m_main; 
 		bool m_windowVisible;
 	};
 }

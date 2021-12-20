@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace DirectXPanels
+namespace Rendering
 {
 	// Constant buffer used to send MVP matrices to the vertex shader.
 	struct ModelViewProjectionConstantBuffer
@@ -20,5 +20,11 @@ namespace DirectXPanels
 	{
 		std::vector<Vertex> Vertices;
 		std::vector<UINT> Indices;
+	};
+
+	struct MeshOffset
+	{
+		UINT IndexOffset;
+		UINT VertexOffset;
 	};
 }

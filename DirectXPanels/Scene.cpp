@@ -1,14 +1,14 @@
 ﻿#include "pch.h"
-#include "_3DRotationsMain.h"
+#include "Scene.h"
 #include "Common\DirectXHelper.h"
 
-using namespace DirectXPanels;
+using namespace Rendering;
 using namespace Windows::Foundation;
 using namespace Windows::System::Threading;
 using namespace Concurrency;
 
 // Loads and initializes application assets when the application is loaded.
-_3DRotationsMain::_3DRotationsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
+Scene::Scene(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
 	m_deviceResources(deviceResources), m_pointerLocationX(0.0f)
 {
 	// Register to be notified if the Device is lost or recreated
@@ -17,35 +17,28 @@ _3DRotationsMain::_3DRotationsMain(const std::shared_ptr<DX::DeviceResources>& d
 	// TODO: Replace this with your app's content initialization.
 	m_sceneRenderer = std::unique_ptr<SceneRenderer>(new SceneRenderer(m_deviceResources));
 
-	m_fpsTextRenderer = std::unique_ptr<FpsTextRenderer>(new FpsTextRenderer(m_deviceResources));
-
-	// TODO: Change the timer settings if you want something other than the default variable timestep mode.
-	// e.g. for 60 FPS fixed timestep update logic, call:
-	/*
-	m_timer.SetFixedTimeStep(true);
-	m_timer.SetTargetElapsedSeconds(1.0 / 60);
-	*/
+	m_fpsTextRenderer = std::unique_ptr<FpsTextRenderer>(new FpsTextRenderer(m_deviceResources));	
 }
 
-_3DRotationsMain::~_3DRotationsMain()
+Scene::~Scene()
 {
 	// Deregister device notification
 	m_deviceResources->RegisterDeviceNotify(nullptr);
 }
 
-void _3DRotationsMain::UpdateInput(float xAngle, float yAngle, float zAngle)
+void Scene::UpdateInput(float xAngle, float yAngle, float zAngle)
 {
 	m_sceneRenderer->UpdateInput(xAngle, yAngle, zAngle);
 }
 
 // Updates application state when the window size changes (e.g. device orientation change)
-void _3DRotationsMain::CreateWindowSizeDependentResources() 
+void Scene::CreateWindowSizeDependentResources() 
 {
 	// TODO: Replace this with the size-dependent initialization of your app's content.
 	m_sceneRenderer->CreateWindowSizeDependentResources();
 }
 
-void _3DRotationsMain::StartRenderLoop()
+void Scene::StartRenderLoop()
 {
 	// If the animation render loop is already running then do not start another thread.
 	if (m_renderLoopWorker != nullptr && m_renderLoopWorker->Status == AsyncStatus::Started)
@@ -72,13 +65,13 @@ void _3DRotationsMain::StartRenderLoop()
 	m_renderLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
 }
 
-void _3DRotationsMain::StopRenderLoop()
+void Scene::StopRenderLoop()
 {
 	m_renderLoopWorker->Cancel();
 }
 
 // Updates the application state once per frame.
-void _3DRotationsMain::Update() 
+void Scene::Update() 
 {
 	ProcessInput();
 
@@ -92,7 +85,7 @@ void _3DRotationsMain::Update()
 }
 
 // Process all input from the user before updating game state
-void _3DRotationsMain::ProcessInput()
+void Scene::ProcessInput()
 {
 	// TODO: Add per frame input handling here.
 	m_sceneRenderer->TrackingUpdate(m_pointerLocationX);
@@ -100,7 +93,7 @@ void _3DRotationsMain::ProcessInput()
 
 // Renders the current frame according to the current application state.
 // Returns true if the frame was rendered and is ready to be displayed.
-bool _3DRotationsMain::Render() 
+bool Scene::Render() 
 {
 	// Don't try to render anything before the first Update.
 	if (m_timer.GetFrameCount() == 0)
@@ -131,14 +124,14 @@ bool _3DRotationsMain::Render()
 }
 
 // Notifies renderers that device resources need to be released.
-void _3DRotationsMain::OnDeviceLost()
+void Scene::OnDeviceLost()
 {
 	m_sceneRenderer->ReleaseDeviceDependentResources();
 	m_fpsTextRenderer->ReleaseDeviceDependentResources();
 }
 
 // Notifies renderers that device resources may now be recreated.
-void _3DRotationsMain::OnDeviceRestored()
+void Scene::OnDeviceRestored()
 {
 	m_sceneRenderer->CreateDeviceDependentResources();
 	m_fpsTextRenderer->CreateDeviceDependentResources();

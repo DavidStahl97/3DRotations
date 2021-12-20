@@ -3,7 +3,7 @@
 
 #include "Common/DirectXHelper.h"
 
-using namespace DirectXPanels;
+using namespace Rendering;
 using namespace Microsoft::WRL;
 
 // Initializes D2D resources used for text rendering.

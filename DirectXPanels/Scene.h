@@ -6,13 +6,13 @@
 #include "Content\FpsTextRenderer.h"
 
 // Renders Direct2D and 3D content on the screen.
-namespace DirectXPanels
+namespace Rendering
 {
-	class _3DRotationsMain : public DX::IDeviceNotify
+	class Scene : public DX::IDeviceNotify
 	{
 	public:
-		_3DRotationsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources);
-		~_3DRotationsMain();
+		Scene(const std::shared_ptr<DX::DeviceResources>& deviceResources);
+		~Scene();
 		void CreateWindowSizeDependentResources();
 		void StartRenderLoop();
 		void StopRenderLoop();
@@ -22,7 +22,7 @@ namespace DirectXPanels
 
 		// IDeviceNotify
 		virtual void OnDeviceLost();
-		virtual void OnDeviceRestored();
+		virtual void OnDeviceRestored();	
 
 	private:
 		void ProcessInput();

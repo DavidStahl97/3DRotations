@@ -5,7 +5,7 @@
 #include "..\Common\DirectXHelper.h"
 #include "Meshes.h"
 
-using namespace DirectXPanels;
+using namespace Rendering;
 
 using namespace DirectX;
 using namespace Windows::Foundation;
@@ -58,20 +58,13 @@ void SceneRenderer::CreateWindowSizeDependentResources()
 		&m_constantBufferData.projection,
 		XMMatrixTranspose(perspectiveMatrix * orientationMatrix)
 		);
-
-	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
-	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
-	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
-
-	XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(eye, at, up)));
 }
 
 void SceneRenderer::UpdateInput(float xAngle, float yAngle, float zAngle) 
 {
-	m_xAngle = xAngle;
-	m_yAngle = yAngle;
-	m_zAngle = zAngle;
+	//m_xAngle = xAngle;
+	//m_yAngle = yAngle;
+	//m_zAngle = zAngle;
 }
 
 // Called once per frame, rotates the cube and calculates the model and view matrices.
@@ -85,7 +78,7 @@ void SceneRenderer::Update()
 		//double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
 		//float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
 
-		Rotate(m_xAngle, m_yAngle, m_zAngle);
+		//Rotate(m_xAngle, m_yAngle, m_zAngle);
 	}
 }
 
@@ -93,11 +86,8 @@ void SceneRenderer::Update()
 void SceneRenderer::Rotate(float x_angle, float y_angle, float z_angle)
 {
 
-	auto rotationMatrix = XMMatrixRotationX(x_angle) * XMMatrixRotationY(y_angle) * XMMatrixRotationZ(z_angle);
 
-	// Prepare to pass the updated model matrix to the shader
-	XMStoreFloat4x4(&m_constantBufferData.model, rotationMatrix);
-	//XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+	
 }
 
 void SceneRenderer::StartTracking()
@@ -128,36 +118,47 @@ void SceneRenderer::Render()
 	{
 		return;
 	}
+	
+	m_World.Update();
 
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
-	// Prepare the constant buffer to send it to the graphics device.
-	context->UpdateSubresource1(
-		m_constantBuffer.Get(),
-		0,
-		NULL,
-		&m_constantBufferData,
-		0,
-		0,
-		0
+	m_constantBufferData.view = m_World.GetCamera().getView();
+
+	for (auto& object : m_Objects) 
+	{
+		auto& meshOffset = std::get<1>(object);
+		auto& model = std::get<0>(object).GetView();
+
+		m_constantBufferData.model = model;
+
+		// Prepare the constant buffer to send it to the graphics device.
+		context->UpdateSubresource1(
+			m_constantBuffer.Get(),
+			0,
+			NULL,
+			&m_constantBufferData,
+			0,
+			0,
+			0
 		);
 
-	// Each vertex is one instance of the VertexPositionColor struct.
-	UINT stride = sizeof(Vertex);
-	UINT offset = 0;
-	context->IASetVertexBuffers(
-		0,
-		1,
-		m_vertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
+		UINT stride = sizeof(Vertex);
+		UINT offset = meshOffset.VertexOffset;
+		context->IASetVertexBuffers(
+			0,
+			1,
+			m_vertexBuffer.GetAddressOf(),
+			&stride,
+			&offset
 		);
 
-	context->IASetIndexBuffer(
-		m_indexBuffer.Get(),
-		DXGI_FORMAT_R32_UINT, // Each index is one 16-bit unsigned integer (short).
-		0
+		context->IASetIndexBuffer(
+			m_indexBuffer.Get(),
+			DXGI_FORMAT_R32_UINT, // Each index is one 16-bit unsigned integer (short).
+			meshOffset.IndexOffset
 		);
+	}
 
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -197,8 +198,8 @@ void SceneRenderer::Render()
 void SceneRenderer::CreateDeviceDependentResources()
 {
 	// Load shaders asynchronously.
-	auto loadVSTask = DX::ReadDataAsync(L"DirectXPanels\\SampleVertexShader.cso");
-	auto loadPSTask = DX::ReadDataAsync(L"DirectXPanels\\SamplePixelShader.cso");
+	auto loadVSTask = DX::ReadDataAsync(L"DirectXPanels\\VertexShader.cso");
+	auto loadPSTask = DX::ReadDataAsync(L"DirectXPanels\\PixelShader.cso");
 
 	// After the vertex shader file is loaded, create the shader and input layout.
 	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) {
@@ -250,17 +251,31 @@ void SceneRenderer::CreateDeviceDependentResources()
 	});
 
 	// Once both shaders are loaded, create the mesh.
-	auto createCubeTask = (createPSTask && createVSTask).then([this] () {
+	auto createCubeTask = (createPSTask && createVSTask).then([this]() {
+		std::vector<Vertex> vertices;
+		std::vector<UINT> indices;
 
-		MeshData meshData;
-		CreateArrow(meshData);		
+		auto& meshes = m_World.CreateMeshes();
+		for (auto& tuple : meshes) 
+		{
+			auto& object = std::get<0>(tuple);
+			auto& mesh = std::get<1>(tuple);
+			vertices.insert(vertices.begin(), std::begin(mesh.Vertices), std::end(mesh.Vertices));
+			indices.insert(indices.begin(), std::begin(mesh.Indices), std::end(mesh.Indices));
+
+			MeshOffset offset;
+			offset.VertexOffset = 0;
+			offset.IndexOffset = 0;
+
+			m_Objects.push_back(std::tuple<Object&, MeshOffset>(object, offset));
+		}
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
-		vertexBufferData.pSysMem = &meshData.Vertices[0];
+		vertexBufferData.pSysMem = &vertices[0];
 		vertexBufferData.SysMemPitch = 0;
 		vertexBufferData.SysMemSlicePitch = 0;
 
-		CD3D11_BUFFER_DESC vertexBufferDesc(meshData.Vertices.size() * sizeof(Vertex), D3D11_BIND_VERTEX_BUFFER);
+		CD3D11_BUFFER_DESC vertexBufferDesc(vertices.size() * sizeof(Vertex), D3D11_BIND_VERTEX_BUFFER);
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreateBuffer(
 				&vertexBufferDesc,
@@ -269,13 +284,13 @@ void SceneRenderer::CreateDeviceDependentResources()
 				)
 			);		
 
-		m_indexCount = meshData.Indices.size();
+		m_indexCount = indices.size();
 
 		D3D11_SUBRESOURCE_DATA indexBufferData = {0};
-		indexBufferData.pSysMem = &meshData.Indices[0];
+		indexBufferData.pSysMem = &indices[0];
 		indexBufferData.SysMemPitch = 0;
 		indexBufferData.SysMemSlicePitch = 0;
-		CD3D11_BUFFER_DESC indexBufferDesc(meshData.Indices.size() * sizeof(UINT), D3D11_BIND_INDEX_BUFFER);
+		CD3D11_BUFFER_DESC indexBufferDesc(indices.size() * sizeof(UINT), D3D11_BIND_INDEX_BUFFER);
 		DX::ThrowIfFailed(
 			m_deviceResources->GetD3DDevice()->CreateBuffer(
 				&indexBufferDesc,

@@ -3,10 +3,10 @@
 #include "..\Common\DeviceResources.h"
 #include "ShaderStructures.h"
 #include "..\Common\StepTimer.h"
+#include "World.h"
 
-namespace DirectXPanels
+namespace Rendering
 {
-	// This sample renderer instantiates a basic rendering pipeline.
 	class SceneRenderer
 	{
 	public:
@@ -22,11 +22,13 @@ namespace DirectXPanels
 		void StopTracking();
 		bool IsTracking() { return m_tracking; }
 
-
 	private:
 		void Rotate(float x_angle, float y_angle, float z_angle);
 
 	private:
+		World m_World;
+		std::vector<std::tuple<Object&, MeshOffset>> m_Objects;
+
 		// Cached pointer to device resources.
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
@@ -46,10 +48,6 @@ namespace DirectXPanels
 		bool	m_loadingComplete;
 		float	m_degreesPerSecond;
 		bool	m_tracking;
-
-		float m_xAngle = 0;
-		float m_yAngle = 0;
-		float m_zAngle = 0;
 	};
 }
 
