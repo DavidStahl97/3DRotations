@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Camera.h"
 #include "Arrow.h"
+#include "Framework/World/Floor.h"
 #include "Content/ShaderStructures.h"
 
 class World
@@ -16,5 +17,6 @@ public:
 private:	
 	Camera m_Camera;
 	Arrow m_Arrow;
+	Floor m_Floor;
 };
 

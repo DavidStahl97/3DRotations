@@ -158,7 +158,7 @@ void SceneRenderer::Render()
 
 	m_constantBufferData.view = m_World.GetCamera().getView();
 	for (auto& object : m_Objects) 
-	{
+	{	
 		auto& meshOffset = std::get<1>(object);
 		auto& model = std::get<0>(object).GetView();
 
@@ -264,8 +264,8 @@ void SceneRenderer::CreateDeviceDependentResources()
 			offset.IndexOffset = indices.size();
 			offset.IndexCount = mesh.Indices.size();
 
-			vertices.insert(vertices.begin(), std::begin(mesh.Vertices), std::end(mesh.Vertices));
-			indices.insert(indices.begin(), std::begin(mesh.Indices), std::end(mesh.Indices));
+			vertices.insert(vertices.end(), std::begin(mesh.Vertices), std::end(mesh.Vertices));
+			indices.insert(indices.end(), std::begin(mesh.Indices), std::end(mesh.Indices));
 
 			m_Objects.push_back(std::tuple<Object&, MeshOffset>(object, offset));
 		}

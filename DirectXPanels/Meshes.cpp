@@ -30,7 +30,7 @@ Rendering::MeshData CreateArrowMesh()
 		// arrow
 		{XMFLOAT3(length, hight,  0), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f)},
 		{XMFLOAT3(length + arrowLength, hight,  0), XMFLOAT4(0.0f, 0.0f, 0.3f, 1.0f)},
-		{XMFLOAT3(length, hight, 2 * depth), XMFLOAT4(0.1f, 0.0f, 0.3f, 1.0f)},
+		{XMFLOAT3(length, hight, 2 * depth), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
 		{XMFLOAT3(length, hight, 2 * -depth), XMFLOAT4(0.8f, 0.2f, 0.3f, 1.0f)},
 
 		{XMFLOAT3(length, -hight,  0), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f)},
@@ -80,6 +80,42 @@ Rendering::MeshData CreateArrowMesh()
 
 		15, 9, 11,
 		13, 9, 15,
+	};
+
+	meshData.Indices.insert(meshData.Indices.begin(), std::begin(indices), std::end(indices));
+
+	return meshData;
+}
+
+Rendering::MeshData CreateRectangleMesh(float xLength, float yLength, float zLength) 
+{
+	float xHalf = xLength / 2.0f;
+	float yHalf = yLength / 2.0f;
+	float zHalf = zLength / 2.0f;
+
+	Rendering::MeshData meshData;
+
+	static const Rendering::Vertex arrowArray[] =
+	{
+		{ XMFLOAT3(xHalf, yHalf, zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
+		{ XMFLOAT3(xHalf, yHalf, -zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
+		{ XMFLOAT3(xHalf, -yHalf, zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
+		{ XMFLOAT3(xHalf, -yHalf, -zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
+
+		{ XMFLOAT3(-xHalf, yHalf, zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
+		{ XMFLOAT3(-xHalf, yHalf, -zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
+		{ XMFLOAT3(-xHalf, -yHalf, zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
+		{ XMFLOAT3(-xHalf, -yHalf, -zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
+	};
+
+	meshData.Vertices.insert(meshData.Vertices.begin(), std::begin(arrowArray), std::end(arrowArray));
+
+	static const UINT indices[] =
+	{
+		// Top
+		0, 4, 6,
+		0, 6, 2,
+
 	};
 
 	meshData.Indices.insert(meshData.Indices.begin(), std::begin(indices), std::end(indices));

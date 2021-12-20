@@ -85,6 +85,9 @@
     <ClInclude Include="Meshes.h">
       <Filter>Rendering\World</Filter>
     </ClInclude>
+    <ClInclude Include="Framework\World\Floor.h">
+      <Filter>Rendering\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
