@@ -26,11 +26,6 @@ Scene::~Scene()
 	m_deviceResources->RegisterDeviceNotify(nullptr);
 }
 
-void Scene::UpdateInput(float xAngle, float yAngle, float zAngle)
-{
-	m_sceneRenderer->UpdateInput(xAngle, yAngle, zAngle);
-}
-
 // Updates application state when the window size changes (e.g. device orientation change)
 void Scene::CreateWindowSizeDependentResources() 
 {

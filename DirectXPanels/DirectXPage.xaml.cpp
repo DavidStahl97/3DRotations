@@ -91,7 +91,7 @@ DirectXPage::~DirectXPage()
 
 void DirectXPage::InputUpdate(float xAngle, float yAngle, float zAngle) 
 {
-	m_main->UpdateInput(xAngle, yAngle, zAngle);
+	m_main->GetWorld().GetArrow().SetAngles(xAngle, yAngle, zAngle);
 }
 
 // Saves the current state of the app for suspend and terminate events.

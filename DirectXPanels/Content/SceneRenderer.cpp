@@ -122,9 +122,25 @@ void SceneRenderer::Render()
 	m_World.Update();
 
 	auto context = m_deviceResources->GetD3DDeviceContext();
+	
+	context->IASetInputLayout(m_inputLayout.Get());
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// Attach our vertex shader.
+	context->VSSetShader(
+		m_vertexShader.Get(),
+		nullptr,
+		0
+	);
+
+	// Attach our pixel shader.
+	context->PSSetShader(
+		m_pixelShader.Get(),
+		nullptr,
+		0
+	);
 
 	m_constantBufferData.view = m_World.GetCamera().getView();
-
 	for (auto& object : m_Objects) 
 	{
 		auto& meshOffset = std::get<1>(object);
@@ -158,41 +174,23 @@ void SceneRenderer::Render()
 			DXGI_FORMAT_R32_UINT, // Each index is one 16-bit unsigned integer (short).
 			meshOffset.IndexOffset
 		);
+
+		// Send the constant buffer to the graphics device.
+		context->VSSetConstantBuffers1(
+			0,
+			1,
+			m_constantBuffer.GetAddressOf(),
+			nullptr,
+			nullptr
+		);
+
+		// Draw the objects.
+		context->DrawIndexed(
+			m_indexCount,
+			0,
+			0
+		);
 	}
-
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	context->IASetInputLayout(m_inputLayout.Get());
-
-	// Attach our vertex shader.
-	context->VSSetShader(
-		m_vertexShader.Get(),
-		nullptr,
-		0
-		);
-
-	// Send the constant buffer to the graphics device.
-	context->VSSetConstantBuffers1(
-		0,
-		1,
-		m_constantBuffer.GetAddressOf(),
-		nullptr,
-		nullptr
-		);
-
-	// Attach our pixel shader.
-	context->PSSetShader(
-		m_pixelShader.Get(),
-		nullptr,
-		0
-		);
-
-	// Draw the objects.
-	context->DrawIndexed(
-		m_indexCount,
-		0,
-		0
-		);
 }
 
 void SceneRenderer::CreateDeviceDependentResources()
@@ -258,14 +256,14 @@ void SceneRenderer::CreateDeviceDependentResources()
 		auto& meshes = m_World.CreateMeshes();
 		for (auto& tuple : meshes) 
 		{
+			MeshOffset offset;
+			offset.VertexOffset = vertices.size();
+			offset.IndexOffset = indices.size();
+
 			auto& object = std::get<0>(tuple);
 			auto& mesh = std::get<1>(tuple);
 			vertices.insert(vertices.begin(), std::begin(mesh.Vertices), std::end(mesh.Vertices));
 			indices.insert(indices.begin(), std::begin(mesh.Indices), std::end(mesh.Indices));
-
-			MeshOffset offset;
-			offset.VertexOffset = 0;
-			offset.IndexOffset = 0;
 
 			m_Objects.push_back(std::tuple<Object&, MeshOffset>(object, offset));
 		}

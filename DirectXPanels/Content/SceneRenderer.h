@@ -21,6 +21,7 @@ namespace Rendering
 		void TrackingUpdate(float positionX);
 		void StopTracking();
 		bool IsTracking() { return m_tracking; }
+		World& GetWorld() { return m_World; }
 
 	private:
 		void Rotate(float x_angle, float y_angle, float z_angle);

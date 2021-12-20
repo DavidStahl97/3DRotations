@@ -18,7 +18,7 @@ namespace Rendering
 		void StopRenderLoop();
 		Concurrency::critical_section& GetCriticalSection() { return m_criticalSection; }
 
-		void UpdateInput(float xAngle, float yAngle, float zAngle);
+		World& GetWorld() { return m_sceneRenderer->GetWorld(); }
 
 		// IDeviceNotify
 		virtual void OnDeviceLost();

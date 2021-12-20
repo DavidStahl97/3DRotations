@@ -10,7 +10,8 @@ class World
 public:
 	void Update();
 	std::vector<std::tuple<Object&, Rendering::MeshData>> CreateMeshes();
-	Camera GetCamera() { return m_Camera; };
+	Camera& GetCamera() { return m_Camera; };
+	Arrow& GetArrow() { return m_Arrow; }
 
 private:	
 	Camera m_Camera;
