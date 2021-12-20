@@ -25,6 +25,7 @@ namespace Rendering
 	struct MeshOffset
 	{
 		UINT IndexOffset;
+		UINT IndexCount;
 		UINT VertexOffset;
 	};
 }
