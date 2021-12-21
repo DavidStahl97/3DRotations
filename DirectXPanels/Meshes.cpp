@@ -99,13 +99,8 @@ Rendering::MeshData CreateRectangleMesh(float xLength, float yLength, float zLen
 	{
 		{ XMFLOAT3(xHalf, yHalf, zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
 		{ XMFLOAT3(xHalf, yHalf, -zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
-		{ XMFLOAT3(xHalf, -yHalf, zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
-		{ XMFLOAT3(xHalf, -yHalf, -zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
-
 		{ XMFLOAT3(-xHalf, yHalf, zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
 		{ XMFLOAT3(-xHalf, yHalf, -zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
-		{ XMFLOAT3(-xHalf, -yHalf, zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
-		{ XMFLOAT3(-xHalf, -yHalf, -zHalf), XMFLOAT4(0.5f, 0.0f, 0.3f, 1.0f) },
 	};
 
 	meshData.Vertices.insert(meshData.Vertices.begin(), std::begin(arrowArray), std::end(arrowArray));
@@ -113,9 +108,8 @@ Rendering::MeshData CreateRectangleMesh(float xLength, float yLength, float zLen
 	static const UINT indices[] =
 	{
 		// Top
-		0, 4, 6,
-		0, 6, 2,
-
+		0, 2, 1,
+		0, 2, 3
 	};
 
 	meshData.Indices.insert(meshData.Indices.begin(), std::begin(indices), std::end(indices));

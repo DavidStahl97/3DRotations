@@ -28,8 +28,22 @@
                 <local:AngleSlider x:Name="YSlider" Axis="Y" AngleChanged="YSlider_AngleChanged"/>
                 <local:AngleSlider x:Name="XSlider" Axis="X" AngleChanged="XSlider_AngleChanged"/>
             </StackPanel>
+
+            <TextBlock Text="Camera"
+                       Style="{StaticResource TextBlockTitle}"
+                       Margin="0 0 0 10"/>
+
+            <StackPanel Orientation="Vertical"
+                        Padding="5 0 0 0">
+                <local:AngleSlider x:Name="PhiSlider" Axis="Y"  AngleChanged="PhiSlider_AngleChanged"/>
+                <local:AngleSlider x:Name="EpsilonSlider" 
+                                   Axis="X"  
+                                   AngleChanged="EpsilonSlider_AngleChanged"
+                                   Maximum="89"
+                                   Minimum="-89"/>
+            </StackPanel>
         </StackPanel>
-        
+
         <rendering:DirectXPage x:Name="DirectXPage" Grid.Column="1"/>
     </Grid>
 </Page>

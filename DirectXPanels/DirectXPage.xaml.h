@@ -25,6 +25,7 @@ namespace DirectXPanels
 		void LoadInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 
 		void InputUpdate(float xAngle, float yAngle, float zAngle);
+		void UpdateCamera(float phi, float epsilon);
 
 	private:
 		// XAML low-level rendering event handler.

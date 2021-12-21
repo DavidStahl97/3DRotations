@@ -8,7 +8,7 @@ class Floor : public Object
 public:
 	explicit Floor() : Object() 
 	{
-		auto view = DirectX::XMMatrixTranslation(0, -2, 0);
+		auto view = DirectX::XMMatrixTranslation(0, 5, 0);
 		XMStoreFloat4x4(&m_View, view);
 	}
 };

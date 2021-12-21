@@ -22,6 +22,8 @@ namespace RotationApp
         public AngleSlider()
         {
             this.InitializeComponent();
+            Maximum = 360;
+            Minimum = -360;
         }
 
         public static readonly DependencyProperty AngleProperty =
@@ -31,6 +33,24 @@ namespace RotationApp
         { 
             get => (double)GetValue(AngleProperty);
             set => SetValue(AngleProperty, value);
+        }
+
+        public static readonly DependencyProperty MaximumProperty =
+            DependencyProperty.Register(nameof(Maximum), typeof(double), typeof(AngleSlider), null);
+
+        public double Maximum
+        {
+            get => (double)GetValue(MaximumProperty);
+            set => SetValue(MaximumProperty, value);
+        }
+
+        public static readonly DependencyProperty MinimumProperty =
+            DependencyProperty.Register(nameof(Minimum), typeof(double), typeof(AngleSlider), null);
+
+        public double Minimum 
+        { 
+            get => (double)GetValue(MinimumProperty);
+            set => SetValue(MinimumProperty, value);
         }
 
         public static readonly DependencyProperty AxisProperty =

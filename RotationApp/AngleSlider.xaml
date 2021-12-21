@@ -23,8 +23,8 @@
         <Slider x:Name="Slider"                
                 Grid.Column="1"
                 Margin="0 0 10 0"
-                Minimum="-360"
-                Maximum="360"
+                Minimum="{x:Bind Minimum}"
+                Maximum="{x:Bind Maximum}"
                 ValueChanged="Slider_ValueChanged"
                 Value="0"/>
 

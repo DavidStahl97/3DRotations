@@ -37,11 +37,18 @@ namespace RotationApp
             => UpdateAngle(e, YSlider.Angle, ZSlider.Angle);
 
         private void UpdateAngle(double x, double y, double z)
-        {
-            float DegreesToRadius(double degree)
-                => (float)((degree / 360) * 2 * Math.PI);
+            => DirectXPage.InputUpdate(DegreesToRadius(x), DegreesToRadius(y), DegreesToRadius(z)); 
 
-            DirectXPage.InputUpdate(DegreesToRadius(x), DegreesToRadius(y), DegreesToRadius(z)); 
-        }
+        private float DegreesToRadius(double degree)
+            => (float)((degree / 360) * 2 * Math.PI);
+
+        private void PhiSlider_AngleChanged(object sender, double e)
+            => UpdateCamera(e, EpsilonSlider.Angle);
+
+        private void EpsilonSlider_AngleChanged(object sender, double e)
+            => UpdateCamera(PhiSlider.Angle, e);
+
+        private void UpdateCamera(double phi, double epsilon)
+            => DirectXPage.UpdateCamera(DegreesToRadius(phi), DegreesToRadius(epsilon));
     }
 }
