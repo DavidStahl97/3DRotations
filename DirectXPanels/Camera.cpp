@@ -11,7 +11,7 @@ void Camera::Update()
 	auto& zero = XMVectorSet(0, 0, 1, 0);
 
 	auto& phiRotationVector = XMVector4Transform(zero, XMMatrixRotationY(m_Phi));
-	auto& eye = XMVector4Transform(phiRotationVector,
+	auto& eye = m_Distance * XMVector4Transform(phiRotationVector,
 		XMMatrixRotationAxis(
 			XMVector3Cross(phiRotationVector, XMVectorSet(0, 1, 0, 0)), m_Epsilon));
 

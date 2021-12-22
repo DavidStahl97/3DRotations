@@ -2,48 +2,93 @@
     x:Class="RotationApp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:RotationApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:RotationApp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
     xmlns:rendering="using:DirectXPanels"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style
+            x:Key="AngleSlider"
+            BasedOn="{StaticResource ValueSlider}"
+            TargetType="local:ValueSlider">
+            <Setter Property="Maximum" Value="360" />
+            <Setter Property="Minimum" Value="-360" />
+            <Setter Property="SlideValue" Value="0" />
+        </Style>
+
+        <Style
+            x:Key="CameraSlider"
+            BasedOn="{StaticResource ValueSlider}"
+            TargetType="local:ValueSlider">
+            <Setter Property="MinTextWidth" Value="60"/>
+        </Style>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical"
-                    Padding="10">
+        <StackPanel Padding="10" Orientation="Vertical">
 
-            <TextBlock Text="Euler Angles"
-                       Style="{StaticResource TextBlockTitle}"
-                       Margin="0 0 0 10"/>
+            <TextBlock
+                Margin="0,0,0,10"
+                Style="{StaticResource TextBlockTitle}"
+                Text="Euler Angles" />
 
-            <StackPanel Orientation="Vertical"
-                        Padding="5 0 0 0">
-                <local:AngleSlider x:Name="ZSlider" Axis="Z" AngleChanged="AngleSlider_AngleChanged"/>
-                <local:AngleSlider x:Name="YSlider" Axis="Y" AngleChanged="YSlider_AngleChanged"/>
-                <local:AngleSlider x:Name="XSlider" Axis="X" AngleChanged="XSlider_AngleChanged"/>
+            <StackPanel Padding="5,0,0,0" Orientation="Vertical">
+                <local:ValueSlider
+                    x:Name="ZSlider"
+                    SliderValueChanged="ZSlider_AngleChanged"
+                    Title="Z"
+                    Style="{StaticResource AngleSlider}" />
+                <local:ValueSlider
+                    x:Name="YSlider"
+                    SliderValueChanged="YSlider_AngleChanged"
+                    Style="{StaticResource AngleSlider}" 
+                    Title="Y"/>
+                <local:ValueSlider
+                    x:Name="XSlider"
+                    SliderValueChanged="XSlider_AngleChanged"
+                    Style="{StaticResource AngleSlider}" 
+                    Title="X"/>
             </StackPanel>
 
-            <TextBlock Text="Camera"
-                       Style="{StaticResource TextBlockTitle}"
-                       Margin="0 0 0 10"/>
+            <TextBlock
+                Margin="0,0,0,10"
+                Style="{StaticResource TextBlockTitle}"
+                Text="Camera" />
 
-            <StackPanel Orientation="Vertical"
-                        Padding="5 0 0 0">
-                <local:AngleSlider x:Name="PhiSlider" Axis="Y"  AngleChanged="PhiSlider_AngleChanged"/>
-                <local:AngleSlider x:Name="EpsilonSlider" 
-                                   Axis="X"  
-                                   AngleChanged="EpsilonSlider_AngleChanged"
-                                   Maximum="89"
-                                   Minimum="-89"/>
+            <StackPanel Padding="5,0,0,0" Orientation="Vertical">
+                <local:ValueSlider
+                    x:Name="PhiSlider"
+                    SliderValueChanged="PhiSlider_AngleChanged"
+                    Title="Phi"
+                    Maximum="360"
+                    Minimum="-360"
+                    SlideValue="0"
+                    Style="{StaticResource CameraSlider}"/>
+                <local:ValueSlider
+                    x:Name="EpsilonSlider"
+                    SliderValueChanged="EpsilonSlider_AngleChanged"
+                    Title="Epsilon"
+                    Maximum="89"
+                    Minimum="-89" 
+                    Style="{StaticResource CameraSlider}"/>
+                <local:ValueSlider
+                    x:Name="DistanceSlider"
+                    SliderValueChanged="DistanceSlider_AngleChanged"
+                    Title="Distance"
+                    Maximum="100"
+                    Minimum="0" 
+                    Style="{StaticResource CameraSlider}"/>
             </StackPanel>
         </StackPanel>
 
-        <rendering:DirectXPage x:Name="DirectXPage" Grid.Column="1"/>
+        <rendering:DirectXPage x:Name="DirectXPage" Grid.Column="1" />
     </Grid>
 </Page>

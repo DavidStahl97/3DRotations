@@ -94,11 +94,12 @@ void DirectXPage::InputUpdate(float xAngle, float yAngle, float zAngle)
 	m_main->GetWorld().GetArrow().SetAngles(xAngle, yAngle, zAngle);
 }
 
-void DirectXPage::UpdateCamera(float phi, float epsilon) 
+void DirectXPage::UpdateCamera(float phi, float epsilon, float distance)
 {
 	auto& camera = m_main->GetWorld().GetCamera();
 	camera.SetPhi(phi);
 	camera.SetEpsilon(epsilon);
+	camera.SetDistance(distance);
 }
 
 // Saves the current state of the app for suspend and terminate events.

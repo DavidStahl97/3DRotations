@@ -25,16 +25,19 @@ namespace RotationApp
         public MainPage()
         {
             this.InitializeComponent();
+
+            UpdateAngle(XSlider.SlideValue, YSlider.SlideValue, ZSlider.SlideValue);
+            UpdateCamera(PhiSlider.SlideValue, EpsilonSlider.SlideValue, DistanceSlider.SlideValue);
         }
 
-        private void AngleSlider_AngleChanged(object _, double e)
-            => UpdateAngle(XSlider.Angle, YSlider.Angle, e);
+        private void ZSlider_AngleChanged(object _, ValueChangedEventArgs<int> e)
+            => UpdateAngle(XSlider.SlideValue, YSlider.SlideValue, e.Value);
 
-        private void YSlider_AngleChanged(object _, double e)
-            => UpdateAngle(XSlider.Angle, e, ZSlider.Angle);
+        private void YSlider_AngleChanged(object _, ValueChangedEventArgs<int> e)
+            => UpdateAngle(XSlider.SlideValue, e.Value, ZSlider.SlideValue);
 
-        private void XSlider_AngleChanged(object _, double e)
-            => UpdateAngle(e, YSlider.Angle, ZSlider.Angle);
+        private void XSlider_AngleChanged(object _, ValueChangedEventArgs<int> e)
+            => UpdateAngle(e.Value, YSlider.SlideValue, ZSlider.SlideValue);
 
         private void UpdateAngle(double x, double y, double z)
             => DirectXPage.InputUpdate(DegreesToRadius(x), DegreesToRadius(y), DegreesToRadius(z)); 
@@ -42,13 +45,17 @@ namespace RotationApp
         private float DegreesToRadius(double degree)
             => (float)((degree / 360) * 2 * Math.PI);
 
-        private void PhiSlider_AngleChanged(object sender, double e)
-            => UpdateCamera(e, EpsilonSlider.Angle);
+        private void PhiSlider_AngleChanged(object sender, ValueChangedEventArgs<int> e)
+            => UpdateCamera(e.Value, EpsilonSlider.SlideValue, DistanceSlider.SlideValue);
 
-        private void EpsilonSlider_AngleChanged(object sender, double e)
-            => UpdateCamera(PhiSlider.Angle, e);
+        private void EpsilonSlider_AngleChanged(object sender, ValueChangedEventArgs<int> e)
+            => UpdateCamera(PhiSlider.SlideValue, e.Value, DistanceSlider.SlideValue);
 
-        private void UpdateCamera(double phi, double epsilon)
-            => DirectXPage.UpdateCamera(DegreesToRadius(phi), DegreesToRadius(epsilon));
+        private void DistanceSlider_AngleChanged(object sender, ValueChangedEventArgs<int> e)
+            => UpdateCamera(PhiSlider.SlideValue, EpsilonSlider.SlideValue, e.Value);
+
+        private void UpdateCamera(double phi, double epsilon, double distance)
+            => DirectXPage.UpdateCamera(DegreesToRadius(phi), DegreesToRadius(epsilon), 
+                (float)(1.0 + (distance / 100.0) * 1.5));
     }
 }

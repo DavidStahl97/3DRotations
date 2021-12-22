@@ -9,6 +9,7 @@ public:
 
 	void SetPhi(float phi) { m_Phi = phi; }
 	void SetEpsilon(float epsilon) { m_Epsilon = epsilon; }
+	void SetDistance(float distance) { m_Distance = distance; }
 
 private:
 	DirectX::XMFLOAT4X4 m_View;
